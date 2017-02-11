@@ -33,7 +33,7 @@ func AfterInit(f func()) {
 func Init() {
 	once.Do(func() {
 
-		Read()
+		load()
 
 		log = logrus.WithField("pkg", "config")
 

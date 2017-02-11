@@ -2,10 +2,13 @@ package config
 
 import "sync"
 
-var mutex sync.Mutex
+var (
+  registryMutex sync.Mutex
+  registry = []ConfigInterface{}
+)
 
 func Register(mod ConfigInterface) {
-	mutex.Lock()
-	defer mutex.Unlock()
-	modules = append(modules, mod)
+  registryMutex.Lock()
+	defer registryMutex.Unlock()
+	registry = append(registry, mod)
 }

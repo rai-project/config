@@ -25,14 +25,7 @@ var (
 	readMutex sync.Mutex
 	IsVerbose = false
 	IsDebug   = false
-	IsServer  = false
-	IsClient  = false
 	log       = logrus.WithField("pkg", "config")
-
-	App     = new(appConfig)
-	modules = []ConfigInterface{
-		App,
-	}
 )
 
 var (
@@ -42,56 +35,69 @@ var (
 	ConfigFileType    = "yaml"
 )
 
-func Read() {
+func loadViper() {
+	defer viper.AutomaticEnv() // read in environment variables that match
+	defer func() {
+		for _, pth := range ConfigPaths {
+			if pth[0] != '$' {
+				viper.AddConfigPath(pth)
+				continue
+			}
+			if val, ok := os.LookupEnv(pth); ok {
+				viper.AddConfigPath(val)
+				continue
+			}
+			viper.AddConfigPath(pth)
+		}
 
-	readMutex.Lock()
-	defer readMutex.Unlock()
-
-	initEnv()
-
+		viper.SetConfigType(ConfigFileType)
+	}()
 	if com.IsFile(ConfigFileName) {
-		dir, file := path.Split(ConfigFileName)
-		ext := path.Ext(file)
-		file = strings.TrimSuffix(file, ext)
-		viper.SetConfigName(file)
-		viper.AddConfigPath(dir)
-	} else if val, ok := os.LookupEnv(ConfigEnvironName); ok {
-		log.Info("Found ", ConfigEnvironName, " in env. Using ", val, " as config file name")
+		log.Debug("Found ", ConfigFileName, " being set. Using ", ConfigFileName, " as the config file.")
+		viper.SetConfigFile(ConfigFileName)
+		return
+	}
+	if val, ok := os.LookupEnv(ConfigEnvironName); ok {
 		pth, _ := homedir.Expand(val)
+		log.Debug("Found ", ConfigEnvironName, " in env. Using ", val, " as config file name")
+		if com.IsFile(pth) {
+			viper.SetConfigFile(ConfigFileName)
+			return
+		}
 		dir, file := path.Split(pth)
 		ext := path.Ext(file)
 		file = strings.TrimSuffix(file, ext)
 		viper.SetConfigName(file)
 		viper.AddConfigPath(dir)
-	} else if pth, err := homedir.Expand("~/.rai.yaml"); err == nil && com.IsFile(pth) {
-		log.Info("Using ~/.rai.yaml as config file.")
+		return
+	}
+	if pth, err := homedir.Expand("~/.rai.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ~/.rai.yaml as config file.")
 		home, _ := homedir.Dir()
+		viper.SetConfigFile(pth)
 		viper.SetConfigName(".rai")
 		viper.AddConfigPath(home)
-	} else if pth, err := filepath.Abs("../rai_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Info("Using \"" + pth + "\" as config file.")
+		return
+	}
+	if pth, err := filepath.Abs("../rai_config.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using \"" + pth + "\" as config file.")
+		viper.SetConfigFile(pth)
 		viper.SetConfigName("rai_config")
 		viper.AddConfigPath(filepath.Dir(pth))
-	} else {
-		log.Info("No fixed configuration file found, searching for a config file with name=", ConfigFileName)
-		viper.SetConfigName(ConfigFileName)
+		return
 	}
 
-	for _, pth := range ConfigPaths {
-		if pth[0] != '$' {
-			viper.AddConfigPath(pth)
-			continue
-		}
-		if val, ok := os.LookupEnv(pth); ok {
-			viper.AddConfigPath(val)
-			continue
-		}
-		viper.AddConfigPath(pth)
-	}
+	log.Info("No fixed configuration file found, searching for a config file with name=", ConfigFileName)
+	viper.SetConfigName(ConfigFileName)
+}
 
-	viper.SetConfigType(ConfigFileType)
-	// If a config file is found, read it in.
-	viper.AutomaticEnv() // read in environment variables that match
+func load() {
+
+	readMutex.Lock()
+	defer readMutex.Unlock()
+
+	initEnv()
+	loadViper()
 
 	// read configuration
 	err := viper.ReadInConfig()
@@ -114,17 +120,17 @@ func Read() {
 	if IsVerbose {
 		log.Debug("Using config file:", viper.ConfigFileUsed())
 	}
-	for _, mod := range modules {
-		mod.setDefaults()
+	for _, r := range registry {
+		r.setDefaults()
 	}
-	for _, mod := range modules {
-		mod.Read()
+	for _, r := range registry {
+		r.Read()
 	}
 }
 
 func Debug() {
 	log.Debug("Config = ")
-	for _, mod := range modules {
-		mod.Debug()
+	for _, r := range registry {
+		r.Debug()
 	}
 }
