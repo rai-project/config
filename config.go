@@ -15,7 +15,7 @@ import (
 
 type ConfigInterface interface {
 	ConfigName() string
-	setDefaults()
+	SetDefaults()
 	Read()
 	String() string
 	Debug()
@@ -121,7 +121,7 @@ func load() {
 		log.Debug("Using config file:", viper.ConfigFileUsed())
 	}
 	for _, r := range registry {
-		r.setDefaults()
+		r.SetDefaults()
 	}
 	for _, r := range registry {
 		r.Read()

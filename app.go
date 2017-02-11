@@ -29,7 +29,7 @@ func (appConfig) ConfigName() string {
 	return "App"
 }
 
-func (appConfig) setDefaults() {
+func (appConfig) SetDefaults() {
 }
 
 func (a *appConfig) Read() {
