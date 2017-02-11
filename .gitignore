@@ -22,3 +22,20 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# IDEs
+.idea
+.srclib-cache/
+.srclib-store/
+node_modules/
+vendor/
+.vscode
+*.pb.go
+.env
+nsqd.*.dat
+.env.private
+dist/
+
+cmd/rai/rai
+cmd/raid/raid
+debug

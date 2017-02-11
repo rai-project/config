@@ -1,0 +1,47 @@
+
+
+app:
+  name: rai
+  author: abdul dakkak
+  email: dakkak@illinois.edu
+  license: NCSA or Apache-2.0
+  url: rai-project.com
+  debug: true
+  verbose: true
+  secret: XXX
+
+logging:
+  level: debug
+
+aws:
+  access_key_id: default
+  secret_access_key: default
+  region: us-east-1
+
+database:
+  provider: dynamodb
+
+email:
+  provider: ses
+  source_email: postmaster@rai-project.com
+
+queue:
+  provider: sqs
+
+
+store:
+  provider: s3
+  default_bucket: rai
+
+tracing:
+  provider: xray
+
+docker:
+  image: webgpu/rai
+  tag: root
+  user: root
+  memory_limit: 8Gb
+  time_limit: 1h
+  end_points:
+    - /run/docker.sock
+    - /var/run/docker.sock
