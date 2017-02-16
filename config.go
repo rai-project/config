@@ -31,12 +31,13 @@ var (
 var (
 	ConfigPaths       = []string{"$HOME", "..", "../..", "."}
 	ConfigEnvironName = "RAI_CONFIG_FILE"
-	ConfigFileName    = "rai_config"
+	ConfigFileName    = ".rai_config"
 	ConfigFileType    = "yaml"
 )
 
-func loadViper() {
+func setViperConfig() {
 	defer viper.AutomaticEnv() // read in environment variables that match
+	defer viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	defer func() {
 		for _, pth := range ConfigPaths {
 			if pth[0] != '$' {
@@ -71,19 +72,14 @@ func loadViper() {
 		viper.AddConfigPath(dir)
 		return
 	}
-	if pth, err := homedir.Expand("~/.rai.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using ~/.rai.yaml as config file.")
-		home, _ := homedir.Dir()
+	if pth, err := homedir.Expand("~/.rai_config.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ~/.rai_config.yaml as config file.")
 		viper.SetConfigFile(pth)
-		viper.SetConfigName(".rai")
-		viper.AddConfigPath(home)
 		return
 	}
-	if pth, err := filepath.Abs("../rai_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using \"" + pth + "\" as config file.")
+	if pth, err := filepath.Abs("../.rai_config.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ../.rai_config.yaml as config file.")
 		viper.SetConfigFile(pth)
-		viper.SetConfigName("rai_config")
-		viper.AddConfigPath(filepath.Dir(pth))
 		return
 	}
 
@@ -97,29 +93,18 @@ func load() {
 	defer readMutex.Unlock()
 
 	initEnv()
-	loadViper()
+	setViperConfig()
 
 	// read configuration
 	err := viper.ReadInConfig()
-	if err == nil && viper.IsSet("config") {
-		viper.SetConfigFile(viper.GetString("config"))
-		if com.IsFile(viper.GetString("config")) {
-			// If a config file is found, read it in.
-			viper.AutomaticEnv() // read in environment variables that match
-			err = viper.ReadInConfig()
-		}
-	}
-	if err != nil {
-		log.WithError(err).Panic("Cannot read in configuration file")
-	}
-
 	if err != nil {
 		viper.Debug()
-		log.Panic("Cannot read configuration file. ")
+		log.WithError(err).
+			WithField("config_file", viper.ConfigFileUsed()).
+			Panic("Cannot read in configuration file ")
+		return
 	}
-	if IsVerbose {
-		log.Debug("Using config file:", viper.ConfigFileUsed())
-	}
+
 	for _, r := range registry {
 		r.SetDefaults()
 	}

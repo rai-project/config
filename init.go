@@ -33,9 +33,9 @@ func AfterInit(f func()) {
 func Init() {
 	once.Do(func() {
 
-		load()
-
 		log = logrus.WithField("pkg", "config")
+
+		load()
 
 		if initFunsLength := len(onInitFunctions.funcs); initFunsLength > 0 {
 			var wg sync.WaitGroup
