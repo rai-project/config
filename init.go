@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/k0kubun/pp"
 )
 
 var (
@@ -36,6 +37,10 @@ func Init() {
 		log = logrus.WithField("pkg", "config")
 
 		load()
+
+		if IsDebug {
+			pp.WithLineInfo = true
+		}
 
 		if initFunsLength := len(onInitFunctions.funcs); initFunsLength > 0 {
 			var wg sync.WaitGroup
