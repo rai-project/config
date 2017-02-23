@@ -1,5 +1,5 @@
 hash: 9ed2c9482fae5567c0dfd98b9d9e569096f98a4680423f9bcb4e154cfbb680ad
-updated: 2017-02-22T18:33:15.139833413-06:00
+updated: 2017-02-22T18:41:34.055356272-06:00
 imports:
 - name: github.com/fatih/structs
   version: a720dfa8df582c51dee1b36feabb906bde1588bd
@@ -37,7 +37,7 @@ imports:
 - name: github.com/rai-project/godotenv
   version: 726cc8b906e3d31c70a9671c90a13716a8d3f50d
 - name: github.com/rai-project/vipertags
-  version: 997637b503048b1f8d2a1126ff497db620632608
+  version: c4cab707247985d21c72ba3342a25440949e02bf
 - name: github.com/Sirupsen/logrus
   version: c078b1e43f58d563c74cebe63c85789e76ddb627
 - name: github.com/spf13/afero
