@@ -102,10 +102,9 @@ func load() {
 	// read configuration
 	err := viper.ReadInConfig()
 	if err != nil {
-		viper.Debug()
 		log.WithError(err).
 			WithField("config_file", viper.ConfigFileUsed()).
-			Panic("Cannot read in configuration file ")
+			Error("Cannot read in configuration file ")
 		return
 	}
 
