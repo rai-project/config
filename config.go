@@ -53,6 +53,10 @@ func setViperConfig() {
 
 		viper.SetConfigType(ConfigFileType)
 	}()
+
+	ConfigFileName = "." + appName + "_config"
+	ConfigEnvironName = strings.ToUpper(appName) + "_CONFIG_FILE"
+
 	if com.IsFile(ConfigFileName) {
 		log.Debug("Found ", ConfigFileName, " being set. Using ", ConfigFileName, " as the config file.")
 		viper.SetConfigFile(ConfigFileName)
@@ -72,13 +76,13 @@ func setViperConfig() {
 		viper.AddConfigPath(dir)
 		return
 	}
-	if pth, err := homedir.Expand("~/.rai_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using ~/.rai_config.yaml as config file.")
+	if pth, err := homedir.Expand("~/." + appName + "_config.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ~/." + appName + "_config.yaml as config file.")
 		viper.SetConfigFile(pth)
 		return
 	}
-	if pth, err := filepath.Abs("../.rai_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using ../.rai_config.yaml as config file.")
+	if pth, err := filepath.Abs("../." + appName + "_config.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ../." + appName + "_config.yaml as config file.")
 		viper.SetConfigFile(pth)
 		return
 	}

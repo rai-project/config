@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	appName         = "rai"
 	once            sync.Once
 	onInitFunctions struct {
 		funcs []func()   `json:"funcs"`
@@ -31,8 +32,12 @@ func AfterInit(f func()) {
 	afterInitFunctions.funcs = append(afterInitFunctions.funcs, f)
 }
 
-func Init() {
+func Init(appNames ...string) {
 	once.Do(func() {
+
+		if len(appNames) > 0 {
+			appName = appNames[0]
+		}
 
 		log = logrus.WithField("pkg", "config")
 
