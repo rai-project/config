@@ -105,7 +105,6 @@ func load() {
 		log.WithError(err).
 			WithField("config_file", viper.ConfigFileUsed()).
 			Error("Cannot read in configuration file ")
-		return
 	}
 
 	for _, r := range registry {

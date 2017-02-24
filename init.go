@@ -72,6 +72,7 @@ func Init(appNames ...string) {
 			}
 			wg.Wait()
 		}
+
 		// if Mode.IsVerbose {
 		// 	fmt.Println("Finished running configuration...")
 		// }
