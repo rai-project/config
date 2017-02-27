@@ -12,7 +12,7 @@ const (
 
 // APP holds common application fields credentials and keys.
 type appConfig struct {
-	Name        string `json:"name" config:"app.name" default:"rai"`
+	Name        string `json:"name" config:"app.name" default:"default"`
 	FullName    string `json:"full_name" config:"app.full_name" default:"rai project"`
 	Description string `json:"description" config:"app.description"`
 	License     string `json:"license" config:"app.license" default:"NCSA"`
@@ -36,6 +36,9 @@ func (a *appConfig) Read() {
 	IsDebug = viper.GetBool("app.debug")
 	IsVerbose = viper.GetBool("app.verbose")
 	vipertags.Fill(a)
+	if a.Name == "" || a.Name == "default" {
+		a.Name = appName
+	}
 }
 
 func (a appConfig) String() string {

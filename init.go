@@ -4,9 +4,11 @@ import (
 	"sync"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/k0kubun/pp"
 )
 
 var (
+	appName         = "rai"
 	once            sync.Once
 	onInitFunctions struct {
 		funcs []func()   `json:"funcs"`
@@ -30,12 +32,20 @@ func AfterInit(f func()) {
 	afterInitFunctions.funcs = append(afterInitFunctions.funcs, f)
 }
 
-func Init() {
+func Init(appNames ...string) {
 	once.Do(func() {
+
+		if len(appNames) > 0 {
+			appName = appNames[0]
+		}
+
+		log = logrus.WithField("pkg", "config")
 
 		load()
 
-		log = logrus.WithField("pkg", "config")
+		if IsDebug {
+			pp.WithLineInfo = true
+		}
 
 		if initFunsLength := len(onInitFunctions.funcs); initFunsLength > 0 {
 			var wg sync.WaitGroup
@@ -62,6 +72,7 @@ func Init() {
 			}
 			wg.Wait()
 		}
+
 		// if Mode.IsVerbose {
 		// 	fmt.Println("Finished running configuration...")
 		// }

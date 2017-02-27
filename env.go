@@ -20,15 +20,15 @@ func initEnv() {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
 
-	// load exePath/.rai.profile or exePath/rai.profile where exePath is the path of the rai executable
+	// load exePath/.appName.profile or exePath/appName.profile where exePath is the path of the rai executable
 	exeDir := filepath.Dir(os.Args[0])
 	if dir, err := filepath.Abs(exeDir); err == nil {
-		currentEnvFile := filepath.Join(dir, ".rai.profile")
+		currentEnvFile := filepath.Join(dir, "."+appName+".profile")
 		if com.IsFile(currentEnvFile) {
 			log.WithField("env_file", currentEnvFile).Debug("reading environment from current directory env file")
 			godotenv.Overload(currentEnvFile)
 		}
-		currentEnvFile = filepath.Join(dir, "rai.profile")
+		currentEnvFile = filepath.Join(dir, appName+".profile")
 		if com.IsFile(currentEnvFile) {
 			log.WithField("env_file", currentEnvFile).Debug("reading environment from current directory env file")
 			godotenv.Overload(currentEnvFile)
@@ -36,13 +36,13 @@ func initEnv() {
 	}
 
 	// load ~/.rai.env
-	homeEnvFile, err := homedir.Expand("~/.rai.env")
+	homeEnvFile, err := homedir.Expand("~/." + appName + ".env")
 	if err == nil && com.IsFile(homeEnvFile) {
 		log.WithField("env_file", homeEnvFile).Debug("reading environment from home directory env file")
 		godotenv.Overload(homeEnvFile)
 	}
 	// load ~/.rai.profile
-	homeEnvFile, err = homedir.Expand("~/.rai.profile")
+	homeEnvFile, err = homedir.Expand("~/." + appName + ".profile")
 	if err == nil && com.IsFile(homeEnvFile) {
 		log.WithField("env_file", homeEnvFile).Debug("reading environment from home directory profile file")
 		godotenv.Overload(homeEnvFile)
