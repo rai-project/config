@@ -7,9 +7,10 @@ import (
 	sourcepath "github.com/GeertJohan/go-sourcepath"
 	"github.com/Sirupsen/logrus"
 	"github.com/Unknwon/com"
-	"github.com/mitchellh/go-homedir"
 
 	"github.com/rai-project/godotenv"
+
+	homedir "github.com/mitchellh/go-homedir"
 )
 
 func initEnv() {

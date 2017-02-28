@@ -58,7 +58,7 @@ func setViperConfig() {
 	ConfigEnvironName = strings.ToUpper(appName) + "_CONFIG_FILE"
 
 	if com.IsFile(ConfigFileName) {
-		log.Debug("Found ", ConfigFileName, " being set. Using ", ConfigFileName, " as the config file.")
+		log.Debug("Found ", ConfigFileName, " already set. Using ", ConfigFileName, " as the config file.")
 		viper.SetConfigFile(ConfigFileName)
 		return
 	}
