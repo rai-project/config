@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	appName         = "rai"
+	log             *logrus.Entry
 	once            sync.Once
 	onInitFunctions struct {
 		funcs []func()   `json:"funcs"`
@@ -32,20 +32,21 @@ func AfterInit(f func()) {
 	afterInitFunctions.funcs = append(afterInitFunctions.funcs, f)
 }
 
-func Init(appNames ...string) {
+func Init(opts ...Option) {
 	once.Do(func() {
+		options := NewOptions()
 
-		if len(appNames) > 0 {
-			appName = appNames[0]
+		for _, o := range opts {
+			o(options)
 		}
 
 		log = logrus.WithField("pkg", "config")
-
-		load()
-
-		if IsDebug {
+		if options.IsDebug || options.IsVerbose {
 			pp.WithLineInfo = true
+			log.Level = logrus.DebugLevel
 		}
+
+		load(options)
 
 		if initFunsLength := len(onInitFunctions.funcs); initFunsLength > 0 {
 			var wg sync.WaitGroup
@@ -80,5 +81,17 @@ func Init(appNames ...string) {
 }
 
 func init() {
-	initEnv()
+	log = logrus.WithField("pkg", "config")
+
+	opts := NewOptions()
+	if opts.IsVerbose || opts.IsDebug {
+		log.Level = logrus.DebugLevel
+	}
+
+	initEnv(opts)
+
+	isVerbose, isDebug := modeInfo()
+	if isVerbose || isDebug {
+		log.Level = logrus.DebugLevel
+	}
 }

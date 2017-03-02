@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	sourcepath "github.com/GeertJohan/go-sourcepath"
-	"github.com/Sirupsen/logrus"
 	"github.com/Unknwon/com"
 
 	"github.com/rai-project/godotenv"
@@ -13,36 +12,30 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 )
 
-func initEnv() {
-	if IsVerbose || IsDebug {
-		logrus.SetLevel(logrus.DebugLevel)
-	} else {
-		logrus.SetLevel(logrus.InfoLevel)
-	}
-
-	// load exePath/.appName.profile or exePath/appName.profile where exePath is the path of the rai executable
+func initEnv(opts *Options) {
+	// load exePath/.opts.AppName.profile or exePath/opts.AppName.profile where exePath is the path of the rai executable
 	exeDir := filepath.Dir(os.Args[0])
 	if dir, err := filepath.Abs(exeDir); err == nil {
-		currentEnvFile := filepath.Join(dir, "."+appName+".profile")
+		currentEnvFile := filepath.Join(dir, "."+opts.AppName+".profile")
 		if com.IsFile(currentEnvFile) {
 			log.WithField("env_file", currentEnvFile).Debug("reading environment from current directory env file")
 			godotenv.Overload(currentEnvFile)
 		}
-		currentEnvFile = filepath.Join(dir, appName+".profile")
+		currentEnvFile = filepath.Join(dir, opts.AppName+".profile")
 		if com.IsFile(currentEnvFile) {
 			log.WithField("env_file", currentEnvFile).Debug("reading environment from current directory env file")
 			godotenv.Overload(currentEnvFile)
 		}
 	}
 
-	// load ~/.rai.env
-	homeEnvFile, err := homedir.Expand("~/." + appName + ".env")
+	// load ~/.opts.AppName.env
+	homeEnvFile, err := homedir.Expand("~/." + opts.AppName + ".env")
 	if err == nil && com.IsFile(homeEnvFile) {
 		log.WithField("env_file", homeEnvFile).Debug("reading environment from home directory env file")
 		godotenv.Overload(homeEnvFile)
 	}
-	// load ~/.rai.profile
-	homeEnvFile, err = homedir.Expand("~/." + appName + ".profile")
+	// load ~/.opts.AppName.profile
+	homeEnvFile, err = homedir.Expand("~/." + opts.AppName + ".profile")
 	if err == nil && com.IsFile(homeEnvFile) {
 		log.WithField("env_file", homeEnvFile).Debug("reading environment from home directory profile file")
 		godotenv.Overload(homeEnvFile)

@@ -28,7 +28,7 @@ func (suite *AppTestSuite) TestName() {
 }
 
 func (suite *AppTestSuite) TestLicense() {
-	assert.Equal(suite.T(), "NCSA", App.License)
+	assert.Equal(suite.T(), "NCSA or Apache-2.0", App.License)
 }
 
 func TestAppConfig(t *testing.T) {

@@ -22,7 +22,10 @@ type appConfig struct {
 }
 
 var (
-	App = &appConfig{}
+	App            = &appConfig{}
+	DefaultAppName = "rai"
+	IsDebug        bool
+	IsVerbose      bool
 )
 
 func (appConfig) ConfigName() string {
@@ -33,11 +36,11 @@ func (appConfig) SetDefaults() {
 }
 
 func (a *appConfig) Read() {
-	IsDebug = viper.GetBool("app.debug")
-	IsVerbose = viper.GetBool("app.verbose")
+	IsDebug = viper.GetBool("app.debug") || IsDebug
+	IsVerbose = viper.GetBool("app.verbose") || IsVerbose
 	vipertags.Fill(a)
 	if a.Name == "" || a.Name == "default" {
-		a.Name = appName
+		a.Name = DefaultAppName
 	}
 }
 

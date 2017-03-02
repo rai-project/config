@@ -5,9 +5,9 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-	"sync"
 
-	"github.com/Sirupsen/logrus"
+	"bytes"
+
 	"github.com/Unknwon/com"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -21,52 +21,24 @@ type ConfigInterface interface {
 	Debug()
 }
 
-var (
-	readMutex sync.Mutex
-	IsVerbose = false
-	IsDebug   = false
-	log       = logrus.WithField("pkg", "config")
-)
-
-var (
-	ConfigPaths       = []string{"$HOME", "..", "../..", "."}
-	ConfigEnvironName = "RAI_CONFIG_FILE"
-	ConfigFileName    = ".rai_config"
-	ConfigFileType    = "yaml"
-)
-
-func setViperConfig() {
-	defer viper.AutomaticEnv() // read in environment variables that match
-	defer viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	defer func() {
-		for _, pth := range ConfigPaths {
-			if pth[0] != '$' {
-				viper.AddConfigPath(pth)
-				continue
-			}
-			if val, ok := os.LookupEnv(pth); ok {
-				viper.AddConfigPath(val)
-				continue
-			}
-			viper.AddConfigPath(pth)
-		}
-
-		viper.SetConfigType(ConfigFileType)
-	}()
-
-	ConfigFileName = "." + appName + "_config"
-	ConfigEnvironName = strings.ToUpper(appName) + "_CONFIG_FILE"
-
-	if com.IsFile(ConfigFileName) {
-		log.Debug("Found ", ConfigFileName, " already set. Using ", ConfigFileName, " as the config file.")
-		viper.SetConfigFile(ConfigFileName)
+func setViperConfig(opts *Options) {
+	if opts.ConfigString != "" {
 		return
 	}
-	if val, ok := os.LookupEnv(ConfigEnvironName); ok {
+
+	defer viper.AutomaticEnv() // read in environment variables that match
+	defer viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	if com.IsFile(opts.ConfigFilePath) {
+		log.Debug("Found ", opts.ConfigFilePath, " already set. Using ", opts.ConfigFilePath, " as the config file.")
+		viper.SetConfigFile(opts.ConfigFilePath)
+		return
+	}
+	if val, ok := os.LookupEnv(opts.ConfigEnvironName); ok {
 		pth, _ := homedir.Expand(val)
-		log.Debug("Found ", ConfigEnvironName, " in env. Using ", val, " as config file name")
+		log.Debug("Found ", opts.ConfigEnvironName, " in env. Using ", val, " as config file name")
 		if com.IsFile(pth) {
-			viper.SetConfigFile(ConfigFileName)
+			viper.SetConfigFile(pth)
 			return
 		}
 		dir, file := path.Split(pth)
@@ -76,35 +48,51 @@ func setViperConfig() {
 		viper.AddConfigPath(dir)
 		return
 	}
-	if pth, err := homedir.Expand("~/." + appName + "_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using ~/." + appName + "_config.yaml as config file.")
+	if pth, err := homedir.Expand("~/." + opts.AppName + "_config.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ~/." + opts.AppName + "_config.yaml as config file.")
 		viper.SetConfigFile(pth)
 		return
 	}
-	if pth, err := filepath.Abs("../." + appName + "_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using ../." + appName + "_config.yaml as config file.")
+	if pth, err := filepath.Abs("../." + opts.AppName + "_config.yaml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ../." + opts.AppName + "_config.yaml as config file.")
 		viper.SetConfigFile(pth)
 		return
 	}
 
-	log.Info("No fixed configuration file found, searching for a config file with name=", ConfigFileName)
-	viper.SetConfigName(ConfigFileName)
+	defer func() {
+		for _, pth := range opts.ConfigSearchPaths {
+			pth, err := homedir.Expand(pth)
+			if err != nil {
+				continue
+			}
+			viper.AddConfigPath(pth)
+		}
+		viper.SetConfigType(opts.ConfigFileType)
+	}()
+
+	log.Info("No fixed configuration file found, searching for a config file with name=", opts.ConfigFileBaseName)
+	viper.SetConfigName(opts.ConfigFileBaseName)
 }
 
-func load() {
+func load(opts *Options) {
+	initEnv(opts)
+	if opts.ConfigString == "" {
+		setViperConfig(opts)
 
-	readMutex.Lock()
-	defer readMutex.Unlock()
-
-	initEnv()
-	setViperConfig()
-
-	// read configuration
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.WithError(err).
-			WithField("config_file", viper.ConfigFileUsed()).
-			Error("Cannot read in configuration file ")
+		// read configuration
+		err := viper.ReadInConfig()
+		if err != nil {
+			log.WithError(err).
+				WithField("config_file", viper.ConfigFileUsed()).
+				Error("Cannot read in configuration file ")
+		}
+	} else {
+		reader := bytes.NewBufferString(opts.ConfigString)
+		err := viper.ReadConfig(reader)
+		if err != nil {
+			log.WithError(err).
+				Error("Cannot read in configuration string ")
+		}
 	}
 
 	for _, r := range registry {
@@ -112,15 +100,6 @@ func load() {
 	}
 	for _, r := range registry {
 		r.Read()
-	}
-}
-
-func init() {
-	if v, ok := os.LookupEnv("VERBOSE"); ok && (v == "1" || v == "TRUE") {
-		IsVerbose = true
-	}
-	if v, ok := os.LookupEnv("DEBUG"); ok && (v == "1" || v == "TRUE") {
-		IsDebug = true
 	}
 }
 

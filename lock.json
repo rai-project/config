@@ -12,7 +12,7 @@
         {
             "name": "github.com/Sirupsen/logrus",
             "branch": "master",
-            "revision": "3f603f494d61c73457fb234161d8982b9f0f0b71",
+            "revision": "0208149b40d863d2c1a2f8fe5753096a9cf2cc8b",
             "packages": [
                 "."
             ]
@@ -20,7 +20,7 @@
         {
             "name": "github.com/Unknwon/com",
             "branch": "master",
-            "revision": "28b053d5a2923b87ce8c5a08f3af779894a72758",
+            "revision": "0db4a625e949e956314d7d1adea9bf82384cc10c",
             "packages": [
                 "."
             ]
@@ -28,7 +28,7 @@
         {
             "name": "github.com/fatih/structs",
             "branch": "master",
-            "revision": "dc3312cb1a4513a366c4c9e622ad55c32df12ed3",
+            "revision": "a720dfa8df582c51dee1b36feabb906bde1588bd",
             "packages": [
                 "."
             ]
@@ -44,7 +44,7 @@
         {
             "name": "github.com/hashicorp/hcl",
             "branch": "master",
-            "revision": "372e8ddaa16fd67e371e9323807d056b799360af",
+            "revision": "630949a3c5fa3c613328e1b8256052cbc2327c9b",
             "packages": [
                 "."
             ]
@@ -52,7 +52,7 @@
         {
             "name": "github.com/k0kubun/pp",
             "branch": "master",
-            "revision": "f5dce6ed0ccf6c350f1679964ff6b61f3d6d2033",
+            "revision": "d1532fc5d94ecdf2da29e24d7b99721f3287de4a",
             "packages": [
                 "."
             ]
@@ -68,7 +68,7 @@
         {
             "name": "github.com/mattn/go-colorable",
             "branch": "master",
-            "revision": "d228849504861217f796da67fae4f6e347643f15",
+            "revision": "d898aa9fb31c91f35dd28ca75db377eff023c076",
             "packages": [
                 "."
             ]
@@ -76,7 +76,7 @@
         {
             "name": "github.com/mattn/go-isatty",
             "branch": "master",
-            "revision": "30a891c33c7cde7b02a981314b4228ec99380cca",
+            "revision": "dda3de49cbfcec471bd7a70e6cc01fcc3ff90109",
             "packages": [
                 "."
             ]
@@ -100,7 +100,7 @@
         {
             "name": "github.com/pelletier/go-buffruneio",
             "branch": "master",
-            "revision": "df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d",
+            "revision": "c37440a7cf42ac63b919c752ca73a85067e05992",
             "packages": [
                 "."
             ]
@@ -108,7 +108,7 @@
         {
             "name": "github.com/pelletier/go-toml",
             "branch": "master",
-            "revision": "d1fa2118c12c44e4f5004da216d1efad10cb4924",
+            "revision": "361678322880708ac144df8575e6f01144ba1404",
             "packages": [
                 "."
             ]
@@ -116,7 +116,7 @@
         {
             "name": "github.com/rai-project/godotenv",
             "branch": "master",
-            "revision": "49a98d71a654e5f90239723ae80518a1e234bdd5",
+            "revision": "4eea5d4863542334d540a85cbd0ce558ca30d90c",
             "packages": [
                 "."
             ]
@@ -124,7 +124,7 @@
         {
             "name": "github.com/rai-project/vipertags",
             "branch": "master",
-            "revision": "f37ccea4ff1be5a103dc65516f0473ff582612c1",
+            "revision": "918eb5088d4a3abf31fb6aac339fd1196ceee2a9",
             "packages": [
                 "."
             ]
@@ -132,7 +132,7 @@
         {
             "name": "github.com/spf13/afero",
             "branch": "master",
-            "revision": "72b31426848c6ef12a7a8e216708cb0d1530f074",
+            "revision": "9be650865eab0c12963d8753212f4f9c66cdcf12",
             "packages": [
                 "."
             ]
@@ -140,7 +140,7 @@
         {
             "name": "github.com/spf13/cast",
             "branch": "master",
-            "revision": "d1139bab1c07d5ad390a65e7305876b3c1a8370b",
+            "revision": "f820543c3592e283e311a60d2a600a664e39f6f7",
             "packages": [
                 "."
             ]
@@ -164,7 +164,7 @@
         {
             "name": "github.com/spf13/viper",
             "branch": "master",
-            "revision": "5ed0fc31f7f453625df314d8e66b9791e8d13003",
+            "revision": "7538d73b4eb9511d85a9f1dfef202eeb8ac260f4",
             "packages": [
                 "."
             ]
@@ -172,7 +172,7 @@
         {
             "name": "golang.org/x/sys",
             "branch": "master",
-            "revision": "7a6e5648d140666db5d920909e082ca00a87ba2c",
+            "revision": "e4594059fe4cde2daf423055a596c2cd1e6c9adf",
             "packages": [
                 "unix"
             ]
@@ -180,7 +180,7 @@
         {
             "name": "golang.org/x/text",
             "branch": "master",
-            "revision": "06d6eba81293389cafdff7fca90d75592194b2d9",
+            "revision": "0ad425fe45e885577bef05dc1c50f72e33188b16",
             "packages": [
                 "transform",
                 "unicode/norm"

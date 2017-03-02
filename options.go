@@ -1,0 +1,87 @@
+package config
+
+import (
+	"strings"
+)
+
+type Options struct {
+	AppName            string
+	ConfigSearchPaths  []string
+	ConfigEnvironName  string
+	ConfigFileBaseName string
+	ConfigFileType     string
+	ConfigFilePath     string
+	ConfigString       string
+	IsVerbose          bool
+	IsDebug            bool
+}
+
+type Option func(*Options)
+
+func NewOptions() *Options {
+	isVerbose, isDebug := modeInfo()
+	return &Options{
+		AppName:            DefaultAppName,
+		ConfigSearchPaths:  []string{"$HOME", "..", "../..", "."},
+		ConfigEnvironName:  strings.ToUpper(DefaultAppName) + "_CONFIG_FILE",
+		ConfigFileBaseName: "." + strings.ToLower(DefaultAppName) + "_config",
+		ConfigFileType:     "yaml",
+		IsDebug:            isDebug,
+		IsVerbose:          isVerbose,
+	}
+}
+
+func AppName(s string) Option {
+	return func(opts *Options) {
+		DefaultAppName = s
+		opts.AppName = s
+	}
+}
+
+func ConfigSearchPaths(s []string) Option {
+	return func(opts *Options) {
+		opts.ConfigSearchPaths = s
+	}
+}
+
+func ConfigEnvironName(s string) Option {
+	return func(opts *Options) {
+		opts.ConfigEnvironName = s
+	}
+}
+
+func ConfigFileBaseName(s string) Option {
+	return func(opts *Options) {
+		opts.ConfigFileBaseName = s
+	}
+}
+
+func ConfigFileType(s string) Option {
+	return func(opts *Options) {
+		opts.ConfigFileType = s
+	}
+}
+
+func ConfigFilePath(s string) Option {
+	return func(opts *Options) {
+		opts.ConfigFilePath = s
+	}
+}
+
+func ConfigString(s string) Option {
+	return func(opts *Options) {
+		opts.ConfigString = s
+	}
+}
+
+func VerboseMode(b bool) Option {
+	return func(opts *Options) {
+		opts.IsVerbose = b
+	}
+}
+
+func DebugMode(b bool) Option {
+	return func(opts *Options) {
+		opts.IsDebug = b
+	}
+}
