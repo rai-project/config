@@ -5,16 +5,16 @@ import (
 )
 
 type Options struct {
-	AppName            string
-	AppSecret          string
-	ConfigSearchPaths  []string
-	ConfigEnvironName  string
-	ConfigFileBaseName string
-	ConfigFileType     string
-	ConfigFilePath     string
-	ConfigString       string
-	IsVerbose          bool
-	IsDebug            bool
+	AppName                string
+	AppSecret              string
+	ConfigSearchPaths      []string
+	ConfigEnvironName      string
+	ConfigFileBaseName     string
+	ConfigFileType         string
+	ConfigFileAbsolutePath string
+	ConfigString           string
+	IsVerbose              bool
+	IsDebug                bool
 }
 
 type Option func(*Options)
@@ -70,9 +70,9 @@ func ConfigFileType(s string) Option {
 	}
 }
 
-func ConfigFilePath(s string) Option {
+func ConfigFileAbsolutePath(s string) Option {
 	return func(opts *Options) {
-		opts.ConfigFilePath = s
+		opts.ConfigFileAbsolutePath = s
 	}
 }
 

@@ -29,9 +29,9 @@ func setViperConfig(opts *Options) {
 	defer viper.AutomaticEnv() // read in environment variables that match
 	defer viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
-	if com.IsFile(opts.ConfigFilePath) {
-		log.Debug("Found ", opts.ConfigFilePath, " already set. Using ", opts.ConfigFilePath, " as the config file.")
-		viper.SetConfigFile(opts.ConfigFilePath)
+	if com.IsFile(opts.ConfigFileAbsolutePath) {
+		log.Debug("Found ", opts.ConfigFileAbsolutePath, " already set. Using ", opts.ConfigFileAbsolutePath, " as the config file.")
+		viper.SetConfigFile(opts.ConfigFileAbsolutePath)
 		return
 	}
 	if val, ok := os.LookupEnv(opts.ConfigEnvironName); ok {

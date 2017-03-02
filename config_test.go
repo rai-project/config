@@ -17,7 +17,7 @@ var (
 
 func TestMain(m *testing.M) {
 	Init(
-		ConfigFilePath(filepath.Join(sourcepath.MustAbsoluteDir(), "_fixtures", "config_example.yml")),
+		ConfigFileAbsolutePath(filepath.Join(sourcepath.MustAbsoluteDir(), "_fixtures", "config_example.yml")),
 	)
 	Debug()
 	os.Exit(m.Run())
