@@ -40,6 +40,18 @@ func Init(opts ...Option) {
 			o(options)
 		}
 
+		if options.AppSecret != "" {
+			defer func() {
+				App.Secret = options.AppSecret
+			}()
+		}
+
+		if options.AppName != "" {
+			defer func() {
+				App.Name = options.AppName
+			}()
+		}
+
 		log = logrus.WithField("pkg", "config")
 		if options.IsDebug || options.IsVerbose {
 			pp.WithLineInfo = true

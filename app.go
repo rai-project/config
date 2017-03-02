@@ -17,15 +17,17 @@ type appConfig struct {
 	Description string `json:"description" config:"app.description"`
 	License     string `json:"license" config:"app.license" default:"NCSA"`
 	URL         string `json:"url" config:"app.url" default:"rai-project.com"`
+	Secret      string `json:"-" config:"app.secret" default:"default"`
 	IsDebug     bool   `json:"debug" config:"app.debug" env:"DEBUG"`
 	IsVerbose   bool   `json:"verbose" config:"app.verbose" env:"VERBOSE"`
 }
 
 var (
-	App            = &appConfig{}
-	DefaultAppName = "rai"
-	IsDebug        bool
-	IsVerbose      bool
+	App              = &appConfig{}
+	DefaultAppName   = "rai"
+	DefaultAppSecret = "-secret-"
+	IsDebug          bool
+	IsVerbose        bool
 )
 
 func (appConfig) ConfigName() string {
@@ -41,6 +43,9 @@ func (a *appConfig) Read() {
 	vipertags.Fill(a)
 	if a.Name == "" || a.Name == "default" {
 		a.Name = DefaultAppName
+	}
+	if a.Secret == "" || a.Secret == "default" {
+		a.Secret = DefaultAppSecret
 	}
 }
 

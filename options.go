@@ -6,6 +6,7 @@ import (
 
 type Options struct {
 	AppName            string
+	AppSecret          string
 	ConfigSearchPaths  []string
 	ConfigEnvironName  string
 	ConfigFileBaseName string
@@ -35,6 +36,13 @@ func AppName(s string) Option {
 	return func(opts *Options) {
 		DefaultAppName = s
 		opts.AppName = s
+	}
+}
+
+func AppSecret(s string) Option {
+	return func(opts *Options) {
+		DefaultAppSecret = s
+		opts.AppSecret = s
 	}
 }
 
