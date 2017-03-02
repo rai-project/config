@@ -115,6 +115,15 @@ func load() {
 	}
 }
 
+func init() {
+	if v, ok := os.LookupEnv("VERBOSE"); ok && (v == "1" || v == "TRUE") {
+		IsVerbose = true
+	}
+	if v, ok := os.LookupEnv("DEBUG"); ok && (v == "1" || v == "TRUE") {
+		IsDebug = true
+	}
+}
+
 func Debug() {
 	log.Debug("Config = ")
 	for _, r := range registry {
