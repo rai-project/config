@@ -6,10 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"bytes"
-
 	"github.com/Unknwon/com"
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 )
 
@@ -22,12 +21,12 @@ type ConfigInterface interface {
 }
 
 func setViperConfig(opts *Options) {
+	defer viper.AutomaticEnv() // read in environment variables that match
+	defer viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
 	if opts.ConfigString != "" {
 		return
 	}
-
-	defer viper.AutomaticEnv() // read in environment variables that match
-	defer viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	if com.IsFile(opts.ConfigFileAbsolutePath) {
 		log.Debug("Found ", opts.ConfigFileAbsolutePath, " already set. Using ", opts.ConfigFileAbsolutePath, " as the config file.")
@@ -76,23 +75,31 @@ func setViperConfig(opts *Options) {
 
 func load(opts *Options) {
 	initEnv(opts)
-	if opts.ConfigString == "" {
-		setViperConfig(opts)
+	setViperConfig(opts)
 
-		// read configuration
-		err := viper.ReadInConfig()
+	if opts.ConfigString != "" {
+		configFileName := DefaultAppName + "_config.yml"
+		viper.SetConfigFile(configFileName)
+		viper.AddConfigPath(".")
+		memoryFileSystem := afero.NewMemMapFs()
+		file, err := memoryFileSystem.Create(configFileName)
 		if err != nil {
-			log.WithError(err).
-				WithField("config_file", viper.ConfigFileUsed()).
-				Error("Cannot read in configuration file ")
+			log.WithError(err).Error("Cannot create a memory fs")
 		}
-	} else {
-		reader := bytes.NewBufferString(opts.ConfigString)
-		err := viper.ReadConfig(reader)
+		_, err = file.Write([]byte(opts.ConfigString))
 		if err != nil {
-			log.WithError(err).
-				Error("Cannot read in configuration string ")
+			log.WithError(err).Error("cannot write config memory fs")
 		}
+		defer file.Close()
+		viper.SetFs(memoryFileSystem)
+	}
+
+	// read configuration
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.WithError(err).
+			WithField("config_file", viper.ConfigFileUsed()).
+			Error("Cannot read in configuration file ")
 	}
 
 	for _, r := range registry {

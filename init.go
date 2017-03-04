@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/Sirupsen/logrus"
@@ -86,9 +87,9 @@ func Init(opts ...Option) {
 			wg.Wait()
 		}
 
-		// if Mode.IsVerbose {
-		// 	fmt.Println("Finished running configuration...")
-		// }
+		if IsVerbose {
+			fmt.Println("Finished setting configuration...")
+		}
 	})
 }
 
