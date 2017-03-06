@@ -1,7 +1,9 @@
 package config
 
 import (
+	"github.com/fatih/color"
 	"github.com/k0kubun/pp"
+	colorable "github.com/mattn/go-colorable"
 	"github.com/rai-project/vipertags"
 	"github.com/spf13/viper"
 )
@@ -18,6 +20,7 @@ type appConfig struct {
 	License     string `json:"license" config:"app.license" default:"NCSA"`
 	URL         string `json:"url" config:"app.url" default:"rai-project.com"`
 	Secret      string `json:"-" config:"app.secret" default:"default"`
+	Color       bool   `json:"color" config:"app.color" env:"COLOR"`
 	IsDebug     bool   `json:"debug" config:"app.debug" env:"DEBUG"`
 	IsVerbose   bool   `json:"verbose" config:"app.verbose" env:"VERBOSE"`
 }
@@ -26,6 +29,7 @@ var (
 	App              = &appConfig{}
 	DefaultAppName   = "rai"
 	DefaultAppSecret = "-secret-"
+	DefaultAppColor  = !color.NoColor
 	IsDebug          bool
 	IsVerbose        bool
 )
@@ -43,6 +47,12 @@ func (a *appConfig) Read() {
 	vipertags.Fill(a)
 	if a.Name == "" || a.Name == "default" {
 		a.Name = DefaultAppName
+	}
+	if !viper.IsSet("app.color") {
+		a.Color = DefaultAppColor
+	}
+	if a.Color == false {
+		pp.SetDefaultOutput(colorable.NewNonColorable(pp.GetDefaultOutput()))
 	}
 	if a.Secret == "" || a.Secret == "default" {
 		a.Secret = DefaultAppSecret

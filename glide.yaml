@@ -5,12 +5,17 @@ import:
   version: ~0.11.4
 - package: github.com/Unknwon/com
   version: ~1.0.0
+- package: github.com/fatih/color
+  version: ~1.4.0
 - package: github.com/k0kubun/pp
   version: ~2.3.0
+- package: github.com/mattn/go-colorable
+  version: ~0.0.7
 - package: github.com/mitchellh/go-homedir
 - package: github.com/rai-project/godotenv
   version: ~1.1.0
 - package: github.com/rai-project/vipertags
+- package: github.com/spf13/afero
 - package: github.com/spf13/viper
 testImport:
 - package: github.com/GeertJohan/go.rice

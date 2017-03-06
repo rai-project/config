@@ -9,7 +9,13 @@
         "github.com/Unknwon/com": {
             "branch": "master"
         },
+        "github.com/fatih/color": {
+            "branch": "master"
+        },
         "github.com/k0kubun/pp": {
+            "branch": "master"
+        },
+        "github.com/mattn/go-colorable": {
             "branch": "master"
         },
         "github.com/mitchellh/go-homedir": {
@@ -19,6 +25,9 @@
             "branch": "master"
         },
         "github.com/rai-project/vipertags": {
+            "branch": "master"
+        },
+        "github.com/spf13/afero": {
             "branch": "master"
         },
         "github.com/spf13/viper": {

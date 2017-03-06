@@ -26,6 +26,14 @@
             ]
         },
         {
+            "name": "github.com/fatih/color",
+            "branch": "master",
+            "revision": "7824417a424b65227be8ac9b14d545a7f3e6c3f0",
+            "packages": [
+                "."
+            ]
+        },
+        {
             "name": "github.com/fatih/structs",
             "branch": "master",
             "revision": "a720dfa8df582c51dee1b36feabb906bde1588bd",
@@ -124,7 +132,7 @@
         {
             "name": "github.com/rai-project/vipertags",
             "branch": "master",
-            "revision": "918eb5088d4a3abf31fb6aac339fd1196ceee2a9",
+            "revision": "5d4945c50b8c10708e9f3659a55f4b2bb1b1a17c",
             "packages": [
                 "."
             ]
