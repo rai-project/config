@@ -36,6 +36,7 @@ func AppName(s string) Option {
 	return func(opts *Options) {
 		DefaultAppName = s
 		opts.AppName = s
+		opts.ConfigFileBaseName = "." + strings.ToLower(DefaultAppName) + "_config"
 	}
 }
 

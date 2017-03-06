@@ -28,6 +28,17 @@ func setViperConfig(opts *Options) {
 		return
 	}
 
+	defer func() {
+		for _, pth := range opts.ConfigSearchPaths {
+			pth, err := homedir.Expand(pth)
+			if err != nil {
+				continue
+			}
+			viper.AddConfigPath(pth)
+		}
+		viper.SetConfigType(opts.ConfigFileType)
+	}()
+
 	if com.IsFile(opts.ConfigFileAbsolutePath) {
 		log.Debug("Found ", opts.ConfigFileAbsolutePath, " already set. Using ", opts.ConfigFileAbsolutePath, " as the config file.")
 		viper.SetConfigFile(opts.ConfigFileAbsolutePath)
@@ -57,17 +68,6 @@ func setViperConfig(opts *Options) {
 		viper.SetConfigFile(pth)
 		return
 	}
-
-	defer func() {
-		for _, pth := range opts.ConfigSearchPaths {
-			pth, err := homedir.Expand(pth)
-			if err != nil {
-				continue
-			}
-			viper.AddConfigPath(pth)
-		}
-		viper.SetConfigType(opts.ConfigFileType)
-	}()
 
 	log.Info("No fixed configuration file found, searching for a config file with name=", opts.ConfigFileBaseName)
 	viper.SetConfigName(opts.ConfigFileBaseName)
