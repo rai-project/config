@@ -19,10 +19,10 @@ type appConfig struct {
 	Description string `json:"description" config:"app.description"`
 	License     string `json:"license" config:"app.license" default:"NCSA"`
 	URL         string `json:"url" config:"app.url" default:"rai-project.com"`
-	Secret      string `json:"-" config:"app.secret" default:"default" structs:"-"`
-	Color       bool   `json:"color" config:"app.color" env:"COLOR" structs:"-"`
-	IsDebug     bool   `json:"debug" config:"app.debug" env:"DEBUG" structs:"-"`
-	IsVerbose   bool   `json:"verbose" config:"app.verbose" env:"VERBOSE" structs:"-"`
+	Secret      string `json:"-" config:"app.secret" default:"default"`
+	Color       bool   `json:"color" config:"app.color" env:"COLOR"`
+	IsDebug     bool   `json:"debug" config:"app.debug" env:"DEBUG"`
+	IsVerbose   bool   `json:"verbose" config:"app.verbose" env:"VERBOSE"`
 }
 
 var (
@@ -38,7 +38,10 @@ func (appConfig) ConfigName() string {
 	return "App"
 }
 
-func (appConfig) SetDefaults() {
+func (a *appConfig) SetDefaults() {
+	if a.Secret == "" || a.Secret == "default" {
+		a.Secret = DefaultAppSecret
+	}
 }
 
 func (a *appConfig) Read() {
@@ -53,9 +56,6 @@ func (a *appConfig) Read() {
 	}
 	if a.Color == false {
 		pp.SetDefaultOutput(colorable.NewNonColorable(pp.GetDefaultOutput()))
-	}
-	if a.Secret == "" || a.Secret == "default" {
-		a.Secret = DefaultAppSecret
 	}
 }
 

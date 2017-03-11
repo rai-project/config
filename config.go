@@ -108,6 +108,9 @@ func load(opts *Options) {
 	for _, r := range registry {
 		r.Read()
 	}
+	if IsDebug {
+		println("read config " + viper.ConfigFileUsed())
+	}
 }
 
 func Debug() {
