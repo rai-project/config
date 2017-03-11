@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/fatih/color"
 	"github.com/k0kubun/pp"
 	colorable "github.com/mattn/go-colorable"
 	"github.com/rai-project/vipertags"
@@ -29,7 +28,7 @@ var (
 	App              = &appConfig{}
 	DefaultAppName   = "rai"
 	DefaultAppSecret = "-secret-"
-	DefaultAppColor  = !color.NoColor
+	DefaultAppColor  = true
 	IsDebug          bool
 	IsVerbose        bool
 )
@@ -53,6 +52,7 @@ func (a *appConfig) Read() {
 	}
 	if !viper.IsSet("app.color") {
 		a.Color = DefaultAppColor
+		viper.Set("app.color", a.Color)
 	}
 	if a.Color == false {
 		pp.SetDefaultOutput(colorable.NewNonColorable(pp.GetDefaultOutput()))
@@ -68,5 +68,6 @@ func (a appConfig) Debug() {
 }
 
 func init() {
+	viper.Set("app.color", DefaultAppColor)
 	Register(App)
 }
