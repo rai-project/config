@@ -94,3 +94,9 @@ func DebugMode(b bool) Option {
 		opts.IsDebug = b
 	}
 }
+
+func ColorMode(b bool) Option {
+	return func(opts *Options) {
+		DefaultAppColor = b
+	}
+}
