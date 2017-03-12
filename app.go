@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/fatih/color"
 	"github.com/k0kubun/pp"
 	colorable "github.com/mattn/go-colorable"
 	"github.com/rai-project/vipertags"
@@ -28,7 +29,7 @@ var (
 	App              = &appConfig{}
 	DefaultAppName   = "rai"
 	DefaultAppSecret = "-secret-"
-	DefaultAppColor  = true
+	DefaultAppColor  = !color.NoColor
 	IsDebug          bool
 	IsVerbose        bool
 )
