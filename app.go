@@ -39,7 +39,9 @@ func (appConfig) ConfigName() string {
 }
 
 func (a *appConfig) SetDefaults() {
-	viper.Set("app.color", DefaultAppColor)
+	viper.SetDefault("app.color", DefaultAppColor)
+	viper.SetDefault("app.verbose", IsVerbose)
+	viper.SetDefault("app.debug", IsDebug)
 }
 
 func (a *appConfig) Read() {
@@ -60,6 +62,8 @@ func (a *appConfig) Read() {
 	if a.IsDebug || a.IsVerbose {
 		pp.WithLineInfo = true
 	}
+	IsVerbose = a.IsVerbose
+	IsDebug = a.IsDebug
 }
 
 func (a appConfig) String() string {

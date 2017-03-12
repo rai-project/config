@@ -90,6 +90,7 @@ func VerboseMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsVerbose = b
 		IsVerbose = b
+		App.IsVerbose = b
 		viper.Set("app.verbose", b)
 	}
 }
@@ -98,6 +99,7 @@ func DebugMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsDebug = b
 		IsDebug = b
+		App.IsDebug = b
 		viper.Set("app.debug", b)
 	}
 }
@@ -105,6 +107,7 @@ func DebugMode(b bool) Option {
 func ColorMode(b bool) Option {
 	return func(opts *Options) {
 		DefaultAppColor = b
+		App.Color = b
 		color.NoColor = !b
 		viper.Set("app.color", b)
 	}
