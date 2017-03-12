@@ -58,13 +58,13 @@ func setViperConfig(opts *Options) {
 		viper.AddConfigPath(dir)
 		return
 	}
-	if pth, err := homedir.Expand("~/." + opts.AppName + "_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using ~/." + opts.AppName + "_config.yaml as config file.")
+	if pth, err := homedir.Expand("~/." + opts.AppName + "_config.yml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ~/." + opts.AppName + "_config.yml as config file.")
 		viper.SetConfigFile(pth)
 		return
 	}
-	if pth, err := filepath.Abs("../." + opts.AppName + "_config.yaml"); err == nil && com.IsFile(pth) {
-		log.Debug("Using ../." + opts.AppName + "_config.yaml as config file.")
+	if pth, err := filepath.Abs("../." + opts.AppName + "_config.yml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ../." + opts.AppName + "_config.yml as config file.")
 		viper.SetConfigFile(pth)
 		return
 	}
