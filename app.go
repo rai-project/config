@@ -43,8 +43,6 @@ func (a *appConfig) SetDefaults() {
 }
 
 func (a *appConfig) Read() {
-	IsDebug = viper.GetBool("app.debug") || IsDebug
-	IsVerbose = viper.GetBool("app.verbose") || IsVerbose
 	vipertags.Fill(a)
 	if a.Name == "" || a.Name == "default" {
 		a.Name = DefaultAppName

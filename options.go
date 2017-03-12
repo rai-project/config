@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/spf13/viper"
 )
 
 type Options struct {
@@ -89,6 +90,7 @@ func VerboseMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsVerbose = b
 		IsVerbose = b
+		viper.Set("app.verbose", b)
 	}
 }
 
@@ -96,6 +98,7 @@ func DebugMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsDebug = b
 		IsDebug = b
+		viper.Set("app.debug", b)
 	}
 }
 
@@ -103,5 +106,6 @@ func ColorMode(b bool) Option {
 	return func(opts *Options) {
 		DefaultAppColor = b
 		color.NoColor = !b
+		viper.Set("app.color", b)
 	}
 }
