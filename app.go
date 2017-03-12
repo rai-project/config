@@ -4,6 +4,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/k0kubun/pp"
 	colorable "github.com/mattn/go-colorable"
+	"github.com/rai-project/cmd"
 	"github.com/rai-project/vipertags"
 	"github.com/spf13/viper"
 )
@@ -14,15 +15,16 @@ const (
 
 // APP holds common application fields credentials and keys.
 type appConfig struct {
-	Name        string `json:"name" config:"app.name" default:"default"`
-	FullName    string `json:"full_name" config:"app.full_name" default:"rai project"`
-	Description string `json:"description" config:"app.description"`
-	License     string `json:"license" config:"app.license" default:"NCSA"`
-	URL         string `json:"url" config:"app.url" default:"rai-project.com"`
-	Secret      string `json:"-" config:"app.secret" default:"default"`
-	Color       bool   `json:"color" config:"app.color" env:"COLOR"`
-	IsDebug     bool   `json:"debug" config:"app.debug" env:"DEBUG"`
-	IsVerbose   bool   `json:"verbose" config:"app.verbose" env:"VERBOSE"`
+	Name        string          `json:"name" config:"app.name" default:"default"`
+	FullName    string          `json:"full_name" config:"app.full_name" default:"rai project"`
+	Description string          `json:"description" config:"app.description"`
+	License     string          `json:"license" config:"app.license" default:"NCSA"`
+	URL         string          `json:"url" config:"app.url" default:"rai-project.com"`
+	Secret      string          `json:"-" config:"app.secret" default:"default"`
+	Color       bool            `json:"color" config:"app.color" env:"COLOR"`
+	IsDebug     bool            `json:"debug" config:"app.debug" env:"DEBUG"`
+	IsVerbose   bool            `json:"verbose" config:"app.verbose" env:"VERBOSE"`
+	Version     cmd.VersionInfo `json:"version" config:"-"`
 }
 
 var (
@@ -39,6 +41,9 @@ func (appConfig) ConfigName() string {
 }
 
 func (a *appConfig) SetDefaults() {
+
+	a.Version = cmd.Version
+
 	viper.SetDefault("app.color", DefaultAppColor)
 	viper.SetDefault("app.verbose", IsVerbose)
 	viper.SetDefault("app.debug", IsDebug)
