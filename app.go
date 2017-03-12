@@ -59,6 +59,9 @@ func (a *appConfig) Read() {
 	if a.Color == false {
 		pp.SetDefaultOutput(colorable.NewNonColorable(pp.GetDefaultOutput()))
 	}
+	if a.IsDebug || a.IsVerbose {
+		pp.WithLineInfo = true
+	}
 }
 
 func (a appConfig) String() string {
