@@ -6,6 +6,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/k0kubun/pp"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -88,6 +89,9 @@ func Init(opts ...Option) {
 		}
 
 		if IsVerbose {
+			if viper.ConfigFileUsed() != "" {
+				fmt.Print("[" + viper.ConfigFileUsed() + "]")
+			}
 			fmt.Println("Finished setting configuration...")
 		}
 	})
