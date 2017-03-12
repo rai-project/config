@@ -38,9 +38,7 @@ func (appConfig) ConfigName() string {
 }
 
 func (a *appConfig) SetDefaults() {
-	if a.Secret == "" || a.Secret == "default" {
-		a.Secret = DefaultAppSecret
-	}
+	viper.Set("app.color", DefaultAppColor)
 }
 
 func (a *appConfig) Read() {
@@ -53,6 +51,9 @@ func (a *appConfig) Read() {
 	if !viper.IsSet("app.color") {
 		a.Color = DefaultAppColor
 		viper.Set("app.color", a.Color)
+	}
+	if a.Secret == "" || a.Secret == "default" {
+		a.Secret = DefaultAppSecret
 	}
 	if a.Color == false {
 		pp.SetDefaultOutput(colorable.NewNonColorable(pp.GetDefaultOutput()))
@@ -68,6 +69,5 @@ func (a appConfig) Debug() {
 }
 
 func init() {
-	viper.Set("app.color", DefaultAppColor)
 	Register(App)
 }

@@ -2,6 +2,8 @@ package config
 
 import (
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 type Options struct {
@@ -86,17 +88,20 @@ func ConfigString(s string) Option {
 func VerboseMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsVerbose = b
+		IsVerbose = b
 	}
 }
 
 func DebugMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsDebug = b
+		IsDebug = b
 	}
 }
 
 func ColorMode(b bool) Option {
 	return func(opts *Options) {
 		DefaultAppColor = b
+		color.NoColor = !b
 	}
 }
