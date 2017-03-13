@@ -2,10 +2,13 @@ package config
 
 import (
 	"fmt"
+	"io/ioutil"
 	"sync"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -36,6 +39,8 @@ func AfterInit(f func()) {
 
 func Init(opts ...Option) {
 	once.Do(func() {
+		modeInfo()
+
 		options := NewOptions()
 
 		for _, o := range opts {
@@ -110,5 +115,17 @@ func init() {
 	isVerbose, isDebug := modeInfo()
 	if isVerbose || isDebug {
 		log.Level = logrus.DebugLevel
+	}
+
+	secretFile, err := homedir.Expand("~/." + DefaultAppName + "_secret")
+	if err != nil {
+		return
+	}
+	if com.IsFile(secretFile) {
+		b, err := ioutil.ReadFile(secretFile)
+		if err == nil {
+			DefaultAppSecret = string(b)
+			App.Secret = DefaultAppSecret
+		}
 	}
 }
