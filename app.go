@@ -25,10 +25,13 @@ type appConfig struct {
 	IsDebug     bool            `json:"debug" config:"app.debug" env:"DEBUG"`
 	IsVerbose   bool            `json:"verbose" config:"app.verbose" env:"VERBOSE"`
 	Version     cmd.VersionInfo `json:"version" config:"-"`
+	done        chan struct{}   `json:"-" config:"-"`
 }
 
 var (
-	App              = &appConfig{}
+	App = &appConfig{
+		done: make(chan struct{}),
+	}
 	DefaultAppName   = "rai"
 	DefaultAppSecret = "-secret-"
 	DefaultAppColor  = !color.NoColor
@@ -42,8 +45,11 @@ func (appConfig) ConfigName() string {
 
 func (a *appConfig) SetDefaults() {
 
+	vipertags.SetDefaults(a)
+
 	a.Version = cmd.Version
 
+	viper.SetDefault("app.secret", DefaultAppSecret)
 	viper.SetDefault("app.color", DefaultAppColor)
 	viper.SetDefault("app.verbose", IsVerbose)
 	viper.SetDefault("app.debug", IsDebug)
@@ -69,6 +75,10 @@ func (a *appConfig) Read() {
 	}
 	IsVerbose = a.IsVerbose
 	IsDebug = a.IsDebug
+}
+
+func (c appConfig) Wait() {
+	<-c.done
 }
 
 func (a appConfig) String() string {

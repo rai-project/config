@@ -16,6 +16,7 @@ type ConfigInterface interface {
 	ConfigName() string
 	SetDefaults()
 	Read()
+	Wait()
 	String() string
 	Debug()
 }
