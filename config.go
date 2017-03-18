@@ -103,6 +103,11 @@ func load(opts *Options) {
 			Error("Cannot read in configuration file ")
 	}
 
+	// Everything depens on app, so we load it first
+	App.SetDefaults()
+	App.Read()
+
+	// Load the rest of the configurations
 	for _, r := range registry {
 		r.SetDefaults()
 	}

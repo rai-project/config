@@ -72,6 +72,7 @@ func (a *appConfig) SetDefaults() {
 }
 
 func (a *appConfig) Read() {
+	defer close(a.done)
 	vipertags.Fill(a)
 	if a.Name == "" || a.Name == "default" {
 		a.Name = DefaultAppName
@@ -118,8 +119,7 @@ func readAppSecret() {
 		if App.Secret != "" {
 			return
 		}
-		DefaultAppSecret = string(b)
-		App.Secret = DefaultAppSecret
+		SetAppSecret(string(b))
 	}
 }
 
@@ -129,6 +129,5 @@ func SetAppSecret(s string) {
 }
 
 func init() {
-	Register(App)
 	readAppSecret()
 }
