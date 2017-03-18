@@ -2,19 +2,20 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 	"sync"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 var (
-	log             *logrus.Entry
-	once            sync.Once
+	log                 *logrus.Entry
+	once                sync.Once
+	beforeInitFunctions struct {
+		funcs []func()   `json:"funcs"`
+		mutex sync.Mutex `json:"mutex"`
+	}
 	onInitFunctions struct {
 		funcs []func()   `json:"funcs"`
 		mutex sync.Mutex `json:"mutex"`
@@ -24,6 +25,12 @@ var (
 		mutex sync.Mutex `json:"mutex"`
 	}
 )
+
+func BeforeInit(f func()) {
+	beforeInitFunctions.mutex.Lock()
+	defer beforeInitFunctions.mutex.Unlock()
+	beforeInitFunctions.funcs = append(beforeInitFunctions.funcs, f)
+}
 
 func OnInit(f func()) {
 	onInitFunctions.mutex.Lock()
@@ -39,6 +46,20 @@ func AfterInit(f func()) {
 
 func Init(opts ...Option) {
 	once.Do(func() {
+
+		if beforeInitFunsLength := len(beforeInitFunctions.funcs); beforeInitFunsLength > 0 {
+			var wg sync.WaitGroup
+			wg.Add(beforeInitFunsLength)
+			for ii := range beforeInitFunctions.funcs {
+				f := beforeInitFunctions.funcs[ii]
+				go func() {
+					defer wg.Done()
+					f()
+				}()
+			}
+			wg.Wait()
+		}
+
 		modeInfo()
 
 		options := NewOptions()
@@ -115,17 +136,5 @@ func init() {
 	isVerbose, isDebug := modeInfo()
 	if isVerbose || isDebug {
 		log.Level = logrus.DebugLevel
-	}
-
-	secretFile, err := homedir.Expand("~/." + DefaultAppName + "_secret")
-	if err != nil {
-		return
-	}
-	if com.IsFile(secretFile) {
-		b, err := ioutil.ReadFile(secretFile)
-		if err == nil {
-			DefaultAppSecret = string(b)
-			App.Secret = DefaultAppSecret
-		}
 	}
 }

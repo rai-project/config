@@ -26,6 +26,7 @@ func NewOptions() *Options {
 	isVerbose, isDebug := modeInfo()
 	return &Options{
 		AppName:            DefaultAppName,
+		AppSecret:          DefaultAppSecret,
 		ConfigSearchPaths:  []string{"$HOME", "..", "../..", "."},
 		ConfigEnvironName:  strings.ToUpper(DefaultAppName) + "_CONFIG_FILE",
 		ConfigFileBaseName: "." + strings.ToLower(DefaultAppName) + "_config",

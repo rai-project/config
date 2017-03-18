@@ -1,10 +1,14 @@
 package config
 
 import (
+	"io/ioutil"
+	"time"
+
+	"github.com/Unknwon/com"
 	"github.com/fatih/color"
 	"github.com/k0kubun/pp"
 	colorable "github.com/mattn/go-colorable"
-	"github.com/rai-project/cmd"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/rai-project/vipertags"
 	"github.com/spf13/viper"
 )
@@ -15,28 +19,39 @@ const (
 
 // APP holds common application fields credentials and keys.
 type appConfig struct {
-	Name        string          `json:"name" config:"app.name" default:"default"`
-	FullName    string          `json:"full_name" config:"app.full_name" default:"rai project"`
-	Description string          `json:"description" config:"app.description"`
-	License     string          `json:"license" config:"app.license" default:"NCSA"`
-	URL         string          `json:"url" config:"app.url" default:"rai-project.com"`
-	Secret      string          `json:"-" config:"app.secret"`
-	Color       bool            `json:"color" config:"app.color" env:"COLOR"`
-	IsDebug     bool            `json:"debug" config:"app.debug" env:"DEBUG"`
-	IsVerbose   bool            `json:"verbose" config:"app.verbose" env:"VERBOSE"`
-	Version     cmd.VersionInfo `json:"version" config:"-"`
-	done        chan struct{}   `json:"-" config:"-"`
+	Name        string        `json:"name" config:"app.name"`
+	FullName    string        `json:"full_name" config:"app.full_name" default:"rai project"`
+	Description string        `json:"description" config:"app.description"`
+	License     string        `json:"license" config:"app.license" default:"NCSA"`
+	URL         string        `json:"url" config:"app.url" default:"rai-project.com"`
+	Secret      string        `json:"-" config:"app.secret"`
+	Color       bool          `json:"color" config:"app.color" env:"COLOR"`
+	IsDebug     bool          `json:"debug" config:"app.debug" env:"DEBUG"`
+	IsVerbose   bool          `json:"verbose" config:"app.verbose" env:"VERBOSE"`
+	Version     VersionInfo   `json:"version" config:"-"`
+	done        chan struct{} `json:"-" config:"-"`
 }
 
 var (
-	App = &appConfig{
-		done: make(chan struct{}),
-	}
 	DefaultAppName   = "rai"
-	DefaultAppSecret = "-secret-"
+	DefaultAppSecret string
 	DefaultAppColor  = !color.NoColor
 	IsDebug          bool
 	IsVerbose        bool
+
+	App = &appConfig{
+		Name:        DefaultAppName,
+		Description: DefaultAppDescription,
+		Version: VersionInfo{
+			Version:    "0.2.0",
+			BuildDate:  time.Now().String(),
+			GitCommit:  "-dirty-",
+			GitBranch:  "-dirty-",
+			GitState:   "-dirty-",
+			GitSummary: "-dirty-",
+		},
+		done: make(chan struct{}),
+	}
 )
 
 func (appConfig) ConfigName() string {
@@ -46,8 +61,9 @@ func (appConfig) ConfigName() string {
 func (a *appConfig) SetDefaults() {
 
 	vipertags.SetDefaults(a)
-
-	a.Version = cmd.Version
+	if a.Name == "" || a.Name == "default" {
+		a.Name = DefaultAppName
+	}
 
 	viper.SetDefault("app.secret", DefaultAppSecret)
 	viper.SetDefault("app.color", DefaultAppColor)
@@ -89,6 +105,30 @@ func (a appConfig) Debug() {
 	log.Debug("App Config = ", a)
 }
 
+func readAppSecret() {
+	secretFile, err := homedir.Expand("~/." + App.Name + "_secret")
+	if err != nil {
+		return
+	}
+	if com.IsFile(secretFile) {
+		b, err := ioutil.ReadFile(secretFile)
+		if err != nil {
+			return
+		}
+		if App.Secret != "" {
+			return
+		}
+		DefaultAppSecret = string(b)
+		App.Secret = DefaultAppSecret
+	}
+}
+
+func SetAppSecret(s string) {
+	App.Secret = s
+	DefaultAppSecret = s
+}
+
 func init() {
 	Register(App)
+	readAppSecret()
 }
