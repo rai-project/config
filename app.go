@@ -2,6 +2,7 @@ package config
 
 import (
 	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/Unknwon/com"
@@ -111,16 +112,17 @@ func readAppSecret() {
 	if err != nil {
 		return
 	}
-	if com.IsFile(secretFile) {
-		b, err := ioutil.ReadFile(secretFile)
-		if err != nil {
-			return
-		}
-		if App.Secret != "" {
-			return
-		}
-		SetAppSecret(string(b))
+	if !com.IsFile(secretFile) {
+		return
 	}
+	b, err := ioutil.ReadFile(secretFile)
+	if err != nil {
+		return
+	}
+	if App.Secret != "" {
+		return
+	}
+	SetAppSecret(strings.TrimSpace(string(b)))
 }
 
 func SetAppSecret(s string) {
