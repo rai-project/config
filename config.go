@@ -25,7 +25,7 @@ func setViperConfig(opts *Options) {
 	defer viper.AutomaticEnv() // read in environment variables that match
 	defer viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
-	if opts.ConfigString != "" {
+	if opts.ConfigString != nil {
 		return
 	}
 
@@ -78,7 +78,7 @@ func load(opts *Options) {
 	initEnv(opts)
 	setViperConfig(opts)
 
-	if opts.ConfigString != "" {
+	if opts.ConfigString != nil {
 		configFileName := DefaultAppName + "_config.yml"
 		viper.SetConfigFile(configFileName)
 		viper.AddConfigPath(".")
@@ -87,7 +87,7 @@ func load(opts *Options) {
 		if err != nil {
 			log.WithError(err).Error("Cannot create a memory fs")
 		}
-		_, err = file.Write([]byte(opts.ConfigString))
+		_, err = file.Write([]byte(*opts.ConfigString))
 		if err != nil {
 			log.WithError(err).Error("cannot write config memory fs")
 		}

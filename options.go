@@ -15,7 +15,7 @@ type Options struct {
 	ConfigFileBaseName     string
 	ConfigFileType         string
 	ConfigFileAbsolutePath string
-	ConfigString           string
+	ConfigString           *string
 	IsVerbose              bool
 	IsDebug                bool
 }
@@ -31,6 +31,7 @@ func NewOptions() *Options {
 		ConfigEnvironName:  strings.ToUpper(DefaultAppName) + "_CONFIG_FILE",
 		ConfigFileBaseName: "." + strings.ToLower(DefaultAppName) + "_config",
 		ConfigFileType:     "yml",
+		ConfigString:       nil,
 		IsDebug:            isDebug,
 		IsVerbose:          isVerbose,
 	}
@@ -83,7 +84,7 @@ func ConfigFileAbsolutePath(s string) Option {
 
 func ConfigString(s string) Option {
 	return func(opts *Options) {
-		opts.ConfigString = s
+		opts.ConfigString = &s
 	}
 }
 
