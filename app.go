@@ -29,6 +29,7 @@ type appConfig struct {
 	Color       bool          `json:"color" config:"app.color" env:"COLOR"`
 	IsDebug     bool          `json:"debug" config:"app.debug" env:"DEBUG"`
 	IsVerbose   bool          `json:"verbose" config:"app.verbose" env:"VERBOSE"`
+	TempDir     string        `json:"temp_dir" config:"app.tempdir"`
 	Version     VersionInfo   `json:"version" config:"-"`
 	done        chan struct{} `json:"-" config:"-"`
 }
@@ -90,6 +91,9 @@ func (a *appConfig) Read() {
 	}
 	if a.IsDebug || a.IsVerbose {
 		pp.WithLineInfo = true
+	}
+	if a.TempDir == "" {
+		a.TempDir, _ = ioutil.TempDir("", a.Name)
 	}
 	IsVerbose = a.IsVerbose
 	IsDebug = a.IsDebug
