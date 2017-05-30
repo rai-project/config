@@ -10,7 +10,7 @@ import:
 - package: github.com/k0kubun/pp
   version: ~2.3.0
 - package: github.com/mattn/go-colorable
-  version: ~0.0.7
+  version: master
 - package: github.com/mitchellh/go-homedir
 - package: github.com/rai-project/godotenv
   version: ~1.1.0
