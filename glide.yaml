@@ -3,10 +3,6 @@ import:
 - package: github.com/GeertJohan/go-sourcepath
 - package: github.com/sirupsen/logrus
   version: ^1.0.0
-- package: github.com/Sirupsen/logrus
-  repo: https://github.com/sirupsen/logrus.git
-  vcs: git
-  version: ^1.0.0
 - package: github.com/Unknwon/com
   version: ^1.0.0
 - package: github.com/fatih/color
