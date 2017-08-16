@@ -94,6 +94,12 @@ func (a *appConfig) Read() {
 	}
 	if a.TempDir == "" {
 		a.TempDir, _ = ioutil.TempDir("", a.Name)
+	} else {
+		expand, err := homedir.Expand(a.TempDir)
+		if err != nil {
+			return
+		}
+		a.TempDir = expand
 	}
 	IsVerbose = a.IsVerbose
 	IsDebug = a.IsDebug
