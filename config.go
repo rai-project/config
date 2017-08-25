@@ -32,6 +32,42 @@ func setViperConfig(opts *Options) error {
 		return nil
 	}
 
+	if IsValidRemotePrefix(opts.ConfigRemotePath) {
+		var provider string
+		entry := opts.ConfigRemotePath
+		for _, p := range validRemotePrefixes {
+			if strings.HasPrefix(entry, p) {
+				provider = strings.TrimSuffix(p, "://")
+				entry = strings.TrimPrefix(entry, p)
+				break
+			}
+		}
+		if !strings.HasPrefix(entry, "http://") &&
+			!strings.HasPrefix(entry, "https://") {
+			entry = "http://" + entry
+		}
+		urlParsed, err := url.Parse(entry)
+		if err != nil {
+			return errors.Errorf("unable to parse remote url %s", entry)
+		}
+		path := strings.TrimPrefix(urlParsed.Path, "/")
+		urlParsed.Scheme = ""
+		urlParsed.Path = ""
+		urlString := strings.TrimPrefix(urlParsed.String(), "//")
+		viper.AddRemoteProvider(provider, urlString, path)
+		log.WithField("provider", provider).
+			WithField("url", urlString).
+			WithField("path", path).
+			Info("configuring remote config file provider")
+		if strings.HasSuffix(path, ".json") {
+			viper.SetConfigType("json")
+		} else {
+			viper.SetConfigType("yaml")
+		}
+
+		return nil
+	}
+
 	defer func() {
 		for _, pth := range opts.ConfigSearchPaths {
 			pth, err := homedir.Expand(pth)
@@ -43,34 +79,6 @@ func setViperConfig(opts *Options) error {
 		viper.SetConfigType(opts.ConfigFileType)
 	}()
 
-	if IsValidRemotePrefix(opts.ConfigRemotePath) {
-		var provider string
-		entry := opts.ConfigRemotePath
-		for _, p := range validRemotePrefixes {
-			if strings.HasPrefix(entry, p) {
-				provider = strings.TrimSuffix(entry, "://")
-				break
-			}
-		}
-		entry = strings.TrimPrefix(entry, provider)
-		urlParsed, err := url.Parse(entry)
-		if err != nil {
-			return errors.Errorf("unable to parse remote url %s", entry)
-		}
-		if urlParsed.Scheme == "" {
-			urlParsed.Scheme = "http"
-		}
-		path := urlParsed.Path
-		urlParsed.Path = ""
-		viper.AddRemoteProvider(provider, urlParsed.String(), path)
-		if strings.HasSuffix(path, ".json") {
-			viper.SetConfigType("json")
-		} else {
-			viper.SetConfigType("yaml")
-		}
-
-		return nil
-	}
 	if com.IsFile(opts.ConfigFileAbsolutePath) {
 		log.Debug("Found ", opts.ConfigFileAbsolutePath, " already set. Using ", opts.ConfigFileAbsolutePath, " as the config file.")
 		viper.SetConfigFile(opts.ConfigFileAbsolutePath)
@@ -132,6 +140,7 @@ func load(opts *Options) {
 
 	// read configuration
 	if IsValidRemotePrefix(opts.ConfigRemotePath) {
+		log.Info("reading remote configuration file")
 		err = viper.ReadRemoteConfig()
 	} else {
 		err = viper.ReadInConfig()

@@ -31,7 +31,7 @@ func NewOptions() *Options {
 		ConfigSearchPaths:  []string{"$HOME", "..", "../..", "."},
 		ConfigEnvironName:  strings.ToUpper(DefaultAppName) + "_CONFIG_FILE",
 		ConfigFileBaseName: "." + strings.ToLower(DefaultAppName) + "_config",
-		ConfigFileType:     "yml",
+		ConfigFileType:     "yaml",
 		ConfigString:       nil,
 		IsDebug:            isDebug,
 		IsVerbose:          isVerbose,
