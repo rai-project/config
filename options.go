@@ -16,6 +16,7 @@ type Options struct {
 	ConfigFileType         string
 	ConfigFileAbsolutePath string
 	ConfigString           *string
+	ConfigRemotePath       string
 	IsVerbose              bool
 	IsDebug                bool
 }
@@ -73,6 +74,12 @@ func ConfigFileBaseName(s string) Option {
 func ConfigFileType(s string) Option {
 	return func(opts *Options) {
 		opts.ConfigFileType = s
+	}
+}
+
+func ConfigRemotePath(s string) Option {
+	return func(opts *Options) {
+		opts.ConfigRemotePath = s
 	}
 }
 
