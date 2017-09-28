@@ -1,5 +1,6 @@
 package config
 
+// VersionInfo ...
 type VersionInfo struct {
 	// Version is populated at compile time by govvv from ./VERSION
 	Version string

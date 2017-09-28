@@ -15,6 +15,7 @@ var (
 	exampleConfig = box.MustString("config_example.yml")
 )
 
+// TestMain ...
 func TestMain(m *testing.M) {
 	Init(
 		ConfigFileAbsolutePath(filepath.Join(sourcepath.MustAbsoluteDir(), "_fixtures", "config_example.yml")),

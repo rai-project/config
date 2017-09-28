@@ -15,6 +15,7 @@ import (
 	_ "github.com/spf13/viper/remote"
 )
 
+// ConfigInterface ...
 type ConfigInterface interface {
 	ConfigName() string
 	SetDefaults()
@@ -167,6 +168,7 @@ func load(opts *Options) {
 	}
 }
 
+// Debug ...
 func Debug() {
 	log.Debug("Config = ")
 	for _, r := range registry {

@@ -7,6 +7,7 @@ var validRemotePrefixes = []string{
 	"consul://",
 }
 
+// IsValidRemotePrefix ...
 func IsValidRemotePrefix(s string) bool {
 	for _, p := range validRemotePrefixes {
 		if strings.HasPrefix(s, p) {

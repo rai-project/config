@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// DefaultAppDescription ...
 const (
 	DefaultAppDescription = ""
 )
@@ -34,6 +35,7 @@ type appConfig struct {
 	done        chan struct{} `json:"-" config:"-"`
 }
 
+// DefaultAppName ...
 var (
 	DefaultAppName   = "rai"
 	DefaultAppSecret string
@@ -56,10 +58,12 @@ var (
 	}
 )
 
+// ConfigName ...
 func (appConfig) ConfigName() string {
 	return "App"
 }
 
+// SetDefaults ...
 func (a *appConfig) SetDefaults() {
 
 	vipertags.SetDefaults(a)
@@ -73,6 +77,7 @@ func (a *appConfig) SetDefaults() {
 	viper.SetDefault("app.debug", IsDebug)
 }
 
+// Read ...
 func (a *appConfig) Read() {
 	defer close(a.done)
 	vipertags.Fill(a)
@@ -105,14 +110,17 @@ func (a *appConfig) Read() {
 	IsDebug = a.IsDebug
 }
 
+// Wait ...
 func (c appConfig) Wait() {
 	<-c.done
 }
 
+// String ...
 func (a appConfig) String() string {
 	return pp.Sprintln(a)
 }
 
+// Debug ...
 func (a appConfig) Debug() {
 	log.Debug("App Config = ", a)
 }
@@ -135,6 +143,7 @@ func readAppSecret() {
 	SetAppSecret(strings.TrimSpace(string(b)))
 }
 
+// SetAppSecret ...
 func SetAppSecret(s string) {
 	App.Secret = s
 	DefaultAppSecret = s

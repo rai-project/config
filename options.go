@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Options ...
 type Options struct {
 	AppName                string
 	AppSecret              string
@@ -21,8 +22,10 @@ type Options struct {
 	IsDebug                bool
 }
 
+// Option ...
 type Option func(*Options)
 
+// NewOptions ...
 func NewOptions() *Options {
 	isVerbose, isDebug := modeInfo()
 	return &Options{
@@ -38,6 +41,7 @@ func NewOptions() *Options {
 	}
 }
 
+// AppName ...
 func AppName(s string) Option {
 	return func(opts *Options) {
 		DefaultAppName = s
@@ -46,6 +50,7 @@ func AppName(s string) Option {
 	}
 }
 
+// AppSecret ...
 func AppSecret(s string) Option {
 	return func(opts *Options) {
 		DefaultAppSecret = s
@@ -53,48 +58,56 @@ func AppSecret(s string) Option {
 	}
 }
 
+// ConfigSearchPaths ...
 func ConfigSearchPaths(s []string) Option {
 	return func(opts *Options) {
 		opts.ConfigSearchPaths = s
 	}
 }
 
+// ConfigEnvironName ...
 func ConfigEnvironName(s string) Option {
 	return func(opts *Options) {
 		opts.ConfigEnvironName = s
 	}
 }
 
+// ConfigFileBaseName ...
 func ConfigFileBaseName(s string) Option {
 	return func(opts *Options) {
 		opts.ConfigFileBaseName = s
 	}
 }
 
+// ConfigFileType ...
 func ConfigFileType(s string) Option {
 	return func(opts *Options) {
 		opts.ConfigFileType = s
 	}
 }
 
+// ConfigRemotePath ...
 func ConfigRemotePath(s string) Option {
 	return func(opts *Options) {
 		opts.ConfigRemotePath = s
 	}
 }
 
+// ConfigFileAbsolutePath ...
 func ConfigFileAbsolutePath(s string) Option {
 	return func(opts *Options) {
 		opts.ConfigFileAbsolutePath = s
 	}
 }
 
+// ConfigString ...
 func ConfigString(s string) Option {
 	return func(opts *Options) {
 		opts.ConfigString = &s
 	}
 }
 
+// VerboseMode ...
 func VerboseMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsVerbose = b
@@ -104,6 +117,7 @@ func VerboseMode(b bool) Option {
 	}
 }
 
+// DebugMode ...
 func DebugMode(b bool) Option {
 	return func(opts *Options) {
 		opts.IsDebug = b
@@ -113,6 +127,7 @@ func DebugMode(b bool) Option {
 	}
 }
 
+// ColorMode ...
 func ColorMode(b bool) Option {
 	return func(opts *Options) {
 		DefaultAppColor = b

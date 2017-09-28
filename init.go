@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/sirupsen/logrus"
 	"github.com/k0kubun/pp"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -26,24 +26,28 @@ var (
 	}
 )
 
+// BeforeInit ...
 func BeforeInit(f func()) {
 	beforeInitFunctions.mutex.Lock()
 	defer beforeInitFunctions.mutex.Unlock()
 	beforeInitFunctions.funcs = append(beforeInitFunctions.funcs, f)
 }
 
+// OnInit ...
 func OnInit(f func()) {
 	onInitFunctions.mutex.Lock()
 	defer onInitFunctions.mutex.Unlock()
 	onInitFunctions.funcs = append(onInitFunctions.funcs, f)
 }
 
+// AfterInit ...
 func AfterInit(f func()) {
 	afterInitFunctions.mutex.Lock()
 	defer afterInitFunctions.mutex.Unlock()
 	afterInitFunctions.funcs = append(afterInitFunctions.funcs, f)
 }
 
+// Init ...
 func Init(opts ...Option) {
 	once.Do(func() {
 
