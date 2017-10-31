@@ -99,6 +99,11 @@ func setViperConfig(opts *Options) error {
 		viper.AddConfigPath(dir)
 		return nil
 	}
+	if pth, err := filepath.Abs("." + opts.AppName + "_config.yml"); err == nil && com.IsFile(pth) {
+		log.Debug("Using ../." + opts.AppName + "_config.yml as config file.")
+		viper.SetConfigFile(pth)
+		return nil
+	}
 	if pth, err := homedir.Expand("~/." + opts.AppName + "_config.yml"); err == nil && com.IsFile(pth) {
 		log.Debug("Using ~/." + opts.AppName + "_config.yml as config file.")
 		viper.SetConfigFile(pth)
