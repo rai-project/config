@@ -1,10 +1,14 @@
 package config
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"sync"
+	"time"
 
 	"github.com/k0kubun/pp"
+	"github.com/rai-project/utils"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -105,14 +109,35 @@ func Init(opts ...Option) {
 			wg.Wait()
 		}
 
+		os.Remove("/tmp/foo.txt")
+		tmp, err := os.Create("/tmp/foo.txt")
+		if err != nil {
+			panic(err)
+		}
+		defer tmp.Close()
+
 		if initFunsLength := len(afterInitFunctions.funcs); initFunsLength > 0 {
 			var wg sync.WaitGroup
-			wg.Add(initFunsLength)
 			for ii := range afterInitFunctions.funcs {
+				wg.Add(1)
 				f := afterInitFunctions.funcs[ii]
 				go func() {
 					defer wg.Done()
-					f()
+					done := make(chan bool, 1)
+					ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+					defer cancel()
+					go func() {
+						f()
+						done <- true
+					}()
+
+					select {
+					case <-done:
+						return
+					case <-ctx.Done():
+						funName := utils.GetFunctionName(f)
+						panic("time limit reached while evaluating config function " + funName)
+					}
 				}()
 			}
 			wg.Wait()
