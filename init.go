@@ -3,7 +3,6 @@ package config
 import (
 	"context"
 	"fmt"
-	"os"
 	"sync"
 	"time"
 
@@ -108,13 +107,6 @@ func Init(opts ...Option) {
 			}
 			wg.Wait()
 		}
-
-		os.Remove("/tmp/foo.txt")
-		tmp, err := os.Create("/tmp/foo.txt")
-		if err != nil {
-			panic(err)
-		}
-		defer tmp.Close()
 
 		if initFunsLength := len(afterInitFunctions.funcs); initFunsLength > 0 {
 			var wg sync.WaitGroup
