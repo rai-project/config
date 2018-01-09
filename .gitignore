@@ -39,3 +39,13 @@ dist/
 cmd/rai/rai
 cmd/raid/raid
 debug
+
+/vendor/
+/.idea/
+/.vscode/
+/bazel-bin
+/bazel-genfiles
+/bazel-out
+/bazel-smith
+/bazel-testlogs
+/build/bin/
