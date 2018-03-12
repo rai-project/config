@@ -117,7 +117,10 @@ func Init(opts ...Option) {
 					ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 					defer cancel()
 					go func() {
+						//tic := time.Now()
 						f()
+						//elapsed := time.Since(tic)
+						//pp.Println(utils.GetFunctionName(f), "  took = ", elapsed)
 						done <- true
 					}()
 
