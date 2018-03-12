@@ -2,14 +2,12 @@ package config
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
 	"github.com/k0kubun/pp"
 	"github.com/rai-project/utils"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 var (
@@ -135,12 +133,12 @@ func Init(opts ...Option) {
 			wg.Wait()
 		}
 
-		if IsVerbose {
-			if viper.ConfigFileUsed() != "" {
-				fmt.Print("[" + viper.ConfigFileUsed() + "]")
-			}
-			fmt.Println("Finished setting configuration...")
-		}
+		// if IsVerbose {
+		// 	if viper.ConfigFileUsed() != "" {
+		// 		fmt.Print("[" + viper.ConfigFileUsed() + "]")
+		// 	}
+		// 	fmt.Println("Finished setting configuration...")
+		// }
 	})
 }
 
