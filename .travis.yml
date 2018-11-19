@@ -11,7 +11,7 @@ cache:
   directories:
     - $GOPATH/pkg/dep
 
-dist: trusty
+dist: xenial
 sudo: false
 before_install:
 - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
