@@ -12,7 +12,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
-	_ "github.com/spf13/viper/remote"
 )
 
 // ConfigInterface ...

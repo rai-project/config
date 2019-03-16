@@ -1,6 +1,12 @@
+//+build remote_config
+
 package config
 
-import "strings"
+import (
+	"strings"
+
+	_ "github.com/spf13/viper/remote"
+)
 
 var validRemotePrefixes = []string{
 	"etcd://",
