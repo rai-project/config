@@ -59,12 +59,12 @@
   version = "v3.3.13"
 
 [[projects]]
-  digest = "1:0ef770954bca104ee99b3b6b7f9b240605ac03517d9f98cbc1893daa03f3c038"
+  digest = "0:"
   name = "github.com/coreos/go-semver"
   packages = ["semver"]
   pruneopts = "UT"
-  revision = "8ab6407b697782a06568d4b7f1db25550ec2e4c6"
-  version = "v0.2.0"
+  revision = "e214231b295a8ea9479f11b70b35d5acf3556d9b"
+  version = "v0.3.0"
 
 [[projects]]
   digest = "0:"
@@ -130,8 +130,8 @@
   name = "github.com/json-iterator/go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "0ff49de124c6f76f8494e194af75bde0f1a49a29"
-  version = "v1.1.6"
+  revision = "27518f6661eba504be5a7a9a9f6d9460d892ade3"
+  version = "v1.1.7"
 
 [[projects]]
   digest = "0:"
@@ -305,7 +305,7 @@
     "remote",
   ]
   pruneopts = "UT"
-  revision = "3349bd9cc2887f06cc4efdc88894e7c3c0e6d872"
+  revision = "33bf76add3b746c1d275f0a5451b4d5750b2f2ff"
 
 [[projects]]
   digest = "0:"
@@ -324,8 +324,8 @@
   name = "github.com/subosito/gotenv"
   packages = ["."]
   pruneopts = "UT"
-  revision = "69b5b6104433beb2cb9c3ce00bdadf3c7c2d3f34"
-  version = "v1.1.1"
+  revision = "2ef7124db659d49edac6aa459693a15ae36c671a"
+  version = "v1.2.0"
 
 [[projects]]
   branch = "master"
@@ -363,7 +363,7 @@
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "04f50cda93cbb67f2afa353c52f342100e80e625"
+  revision = "fde4db37ae7ad8191b03d30d27f258b5291ae4e3"
 
 [[projects]]
   digest = "0:"
