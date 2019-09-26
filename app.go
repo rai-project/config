@@ -2,6 +2,7 @@ package config
 
 import (
 	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -103,6 +104,10 @@ func (a *appConfig) Read() {
 		expand, err := homedir.Expand(a.TempDir)
 		if err != nil {
 			return
+		}
+		err = os.MkdirAll(expand, os.ModePerm)
+		if err != nil {
+			panic("unable to create temporary directory")
 		}
 		a.TempDir = expand
 	}
